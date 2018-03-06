@@ -8,7 +8,7 @@ public class Type {
 
     private static final Map<String, Integer> typeToInt = new HashMap<>();
 
-    //TODO: decide which to use
+    //TODO: decide which to use....
     static {
         typeToInt.put("none", 0);
         typeToInt.put("none", 0);
