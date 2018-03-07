@@ -33,7 +33,7 @@
         const grid_size = 50;
         const board_size = 15;
 
-        let data = "77,76,86,87,98,68,a8,97,b8,88,a6,a7,b6,58";
+        let data = "77,86,87,97,a8,88,a6,a5,75,76,66,57,79,78,58,a9,95,84,85,b7,c7";
         let s = data.split(",");
         let arr1 = new Array(s.length);
 

@@ -101,18 +101,19 @@ public class CData {
         board[p.x][p.y] = i;
     }
 
-    private int getBoard(Pos p) {
+    public int getBoard(Pos p) {
         return board[p.x + 4][p.y + 4];
     }
 
-    private int[][] getBoard() {
-        int[][] bd = new int[15][15];
-        for (int i = 0; i < bd.length; i++) {
-            for (int j = 0; j < bd.length; j++) {
-                bd[i][j] = board[i + 4][j + 4];
-            }
-        }
-        return bd;
+    public int[][] getBoard() {
+//        int[][] bd = new int[15][15];
+//        for (int i = 0; i < bd.length; i++) {
+//            for (int j = 0; j < bd.length; j++) {
+//                bd[i][j] = board[i + 4][j + 4];
+//            }
+//        }
+//        return bd;
+        return board;
     }
 
     /**
@@ -142,6 +143,10 @@ public class CData {
 
     public int length() {
         return len;
+    }
+
+    public int getFinalSide() {
+        return 2 - (len % 2);
     }
 
     // return CData to append more than one time
@@ -294,28 +299,55 @@ public class CData {
     // }
 
     public boolean isWin() {
-        for (Type type : typeMap.values()) {
-            for (int b : type.black) {
-                if (b == five) {
-                    return true;
-                }
-            }
-            for (int w : type.white) {
-                if (w == five) {
-                    return true;
-                }
-            }
-        }
         return false;
+//        for (Type type : typeMap.values()) {
+//            for (int b : type.black) {
+//                if (b == five) {
+//                    return true;
+//                }
+//            }
+//            for (int w : type.white) {
+//                if (w == five) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
     }
 
     public int getValue(Pos p) {
         if (!typeMap.containsKey(p)) {
             return 0;
         }
-        return typeMap.get(p).getScore((len % 2) + 1);
+        return typeMap.get(p).getScore(2-(len % 2));
 
     }
+
+
+    public Pos getBestPosition() {
+        int bestValue = 0;
+        Pos bestPos = new Pos();
+        for (Pos p : typeMap.keySet()) {
+            if (getValue(p) > bestValue) {
+                bestValue = getValue(p);
+                bestPos = p;
+            }
+        }
+        return bestPos;
+    }
+
+    public Pos step() {
+        int score = 0;
+        Pos pos = null;
+        for (Map.Entry<Pos, Type> entry : typeMap.entrySet()) {
+            if (score < getValue(entry.getKey())) {
+                score = getValue(entry.getKey());
+                pos = entry.getKey();
+            }
+        }
+        return pos;
+    }
+
 
     public void plot() {
         System.out.println("_________________");
@@ -360,13 +392,22 @@ public class CData {
         return true;
     }
 
+
     // Test
     public static void main(String[] args) {
         CData d = new CData();
-        d.append(0, 0).append(0, 1).append(0, 2);//.append(1, 1);
-        System.out.println(Arrays.toString(d.board[4]));
-        System.out.println(d.typeMap.get(new Pos(1, 1)));
-        d.plot();
+        d.append(7, 7);
+
+        for (int i = 0; i < 20; i++) {
+            d.append(d.getBestPosition());
+        }
+
+
+        System.out.println(d.toString());
+
+        //System.out.println(Arrays.toString(d.board[4]));
+        //System.out.println(d.typeMap.get(new Pos(1, 1)));
+        //d.plot();
     }
 
 }

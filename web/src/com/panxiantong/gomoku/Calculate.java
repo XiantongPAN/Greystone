@@ -119,18 +119,32 @@ public class Calculate {
 //        return isWin(construct(d, n, 1), d.getData(-1));
 //    }
 
-    private static boolean isWin(int[][] constructedData, Pos p) {
+    public static boolean isWin(CData d) {
+        for (Pos p : d.getData()) {
+            if (isWin(d, p)) {
+                System.out.println("win: " + p);
+                return true;
+            }
+        }
+        return false;
+    }
 
-        p = p.plus(4);
+    public static boolean isWin(CData d, Pos p) {
+
+        int who = d.getBoard(p);
+        if (who == 0) {
+            return false;
+        }
+
         for (Pos dir : dir8) {
             int sum = 0;
-            for (int len = 0; len < 5; len++) {
+            for (int len = 1; len < 5; len++) {
                 // waiting for optimizing
-                if (-1 == p.plus(dir.times(len)).onArray(constructedData)) {
+                if (who == d.getBoard(p.plus(dir.times(len)))) {
                     sum++;
                 }
             }
-            if (sum == 5) {
+            if (sum == 4) {
                 return true;
             }
         }

@@ -1,0 +1,14 @@
+none	0
+oneS	0
+one	0
+twoS	0
+two2	0
+two1	0
+two	40
+threeS	50
+threeJ	100
+three	160
+fourS	320
+fourD	800
+four	800
+five	8000

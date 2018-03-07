@@ -1,0 +1,14 @@
+none	0
+oneS	1
+one	2
+twoS	3
+two2	4
+two1	5
+two	6
+threeS	7
+threeJ	8
+three	9
+fourS	10
+fourD	11
+four	12
+five	13
