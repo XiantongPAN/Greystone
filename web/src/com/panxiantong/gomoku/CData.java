@@ -168,7 +168,7 @@ public class CData {
 //        }
 
         //set board
-        setBoard(p.plus(4), 2 - (len % 2));
+        setBoard(p.plus(4), getFinalSide());
 
         // typeMap
 
@@ -319,7 +319,7 @@ public class CData {
         if (!typeMap.containsKey(p)) {
             return 0;
         }
-        return typeMap.get(p).getScore(2-(len % 2));
+        return typeMap.get(p).getScore(3 - getFinalSide());
 
     }
 
@@ -395,15 +395,15 @@ public class CData {
 
     // Test
     public static void main(String[] args) {
-        CData d = new CData();
-        d.append(7, 7);
-
-        for (int i = 0; i < 20; i++) {
-            d.append(d.getBestPosition());
-        }
+        CData d = new CData("00,77,86,88,66,78,76,96,87,98");
 
 
-        System.out.println(d.toString());
+//        for (int i = 0; i < 20; i++) {
+//            d.append(d.getBestPosition());
+//        }
+        System.out.println(d.getValue(new Pos(10,8)));
+
+        System.out.println(d.typeMap.get(new Pos(10,8)));
 
         //System.out.println(Arrays.toString(d.board[4]));
         //System.out.println(d.typeMap.get(new Pos(1, 1)));

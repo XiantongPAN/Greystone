@@ -1,27 +1,21 @@
 package com.panxiantong;
 
+import com.panxiantong.gomoku.CData;
+import com.panxiantong.gomoku.Calculate;
+import com.panxiantong.gomoku.Tool;
 
-import java.io.IOException;
-
-import javax.servlet.*;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
-import com.panxiantong.gomoku.*;
-
-/**
- * Servlet implementation class CalcServlet
- */
 @WebServlet(name = "CalcServlet", urlPatterns = "/CalcServlet")
 public class CalcServlet extends HttpServlet {
-    private static final long serialVersionUID = 13L;
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public CalcServlet() {
-        super();
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -30,7 +24,7 @@ public class CalcServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        PrintWriter out = response.getWriter();
         // s is the string chess data for transmitting.
         String s = request.getParameter("msg");
         if (s == null || s.length() == 0) {
@@ -46,7 +40,8 @@ public class CalcServlet extends HttpServlet {
             //greystone.DBC.ipAddressInsert(Upload.getIpAddress(request), "w" + s);
 
             // show end game information
-            goWith(d.getFinalSide(), s, d, request, response);
+            //goWith(d.getFinalSide(), s, d, request, response);
+            out.println(d.getFinalSide() + s.substring(1, 2) + "," + d.toString());
 
         } else {
 
@@ -79,40 +74,15 @@ public class CalcServlet extends HttpServlet {
                 //greystone.DBC.ipAddressInsert(Upload.getIpAddress(request), "b" + s);
 
                 // show end game information
-                goWith(d.getFinalSide(), s, d, request, response);
+                //goWith(d.getFinalSide(), s, d, request, response);
+                out.println(d.getFinalSide() + s.substring(1, 2) + "," + d.toString());
             } else {
                 // not win yet
-                goWith(0, s, d, request, response);
+                // goWith(0, s, d, request, response);
+                out.println(0 + s.substring(1, 2) + "," + d.toString());
             }
         }
-
-    }
-
-    /**
-     * @param i        : 0 for not win yet, 1 for black and 2 for white
-     * @param data     : to extract char at 1, that's the engine info
-     * @param d        : see ChessData d in doPost()
-     * @param request  : the rest of param is the same in doPost()
-     * @param response :
-     * @throws ServletException
-     * @throws IOException
-     */
-    private void goWith(int i, String data, CData d, HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String msg = i + data.substring(1, 2) + "," + d.toString();
-        RequestDispatcher rd = request.getRequestDispatcher("gomoku.jsp?msg=" + msg);
-        // request.setAttribute("msg", i + data.substring(1, 2) + "," + d.toString());
-        rd.forward(request, response);
-    }
-
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-     * response)
-     */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        doGet(request, response);
+        out.flush();
     }
 
 }

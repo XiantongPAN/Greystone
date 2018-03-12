@@ -11,7 +11,6 @@ public class Type {
     //TODO: decide which to use.
     static {
         typeToInt.put("none", 0);
-        typeToInt.put("none", 0);
         typeToInt.put("oneS", 1);
         typeToInt.put("one", 2);
         typeToInt.put("twoS", 3);
@@ -21,10 +20,10 @@ public class Type {
         typeToInt.put("threeS", 7);
         typeToInt.put("threeJ", 8);
         typeToInt.put("three", 9);
-        typeToInt.put("fourS", 0);
-        typeToInt.put("fourD", 1);
-        typeToInt.put("four", 2);
-        typeToInt.put("five", 3);
+        typeToInt.put("fourS", 10);
+        typeToInt.put("fourD", 11);
+        typeToInt.put("four", 12);
+        typeToInt.put("five", 13);
     }
 
     enum TypeEnum {
@@ -78,6 +77,7 @@ public class Type {
      */
     public static Type getType(int[][] board, Pos p) {
 
+        //TODO: optimize
         int n = 4;
 
         Type type = new Type();
