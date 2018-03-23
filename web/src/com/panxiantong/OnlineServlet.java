@@ -15,7 +15,11 @@ public class OnlineServlet extends HttpServlet {
 
 
     // Keeps all open connections from browsers
-    private Queue<AsyncContext> asyncContexts = new ConcurrentLinkedQueue<>();
+    private Map<Integer, ConcurrentLinkedQueue<AsyncContext>> asyncContexts = new ConcurrentHashMap<>();
+
+
+    private Map<Integer, String> roomMsg = new ConcurrentHashMap<>();
+
 
     // Temporary store for messages when arrived
     private BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
@@ -26,11 +30,12 @@ public class OnlineServlet extends HttpServlet {
             while (running) {
                 try {
                     // Waits until a message arrives
-                    String message = messageQueue.take();
-
+                    String rmAndmsg = messageQueue.take();
+                    int room = Integer.parseInt(rmAndmsg.substring(0, 1));
+                    String message = rmAndmsg.substring(1, rmAndmsg.length());
                     //System.out.println("test"+message+asyncContexts.size());
                     // Sends the message to all the AsyncContext's response
-                    for (AsyncContext asyncContext : asyncContexts) {
+                    for (AsyncContext asyncContext : asyncContexts.get(room)) {
                         try {
                             ServletResponse response = asyncContext.getResponse();
                             response.setContentType("text/event-stream");
@@ -58,6 +63,12 @@ public class OnlineServlet extends HttpServlet {
         // Load previous messages from DB into messageStore
         // messageStore.addAll(db.loadMessages(100));
 
+        for (int i = 1; i <= 9; i++) {
+            roomMsg.put(i, "77,99");
+
+        }
+
+
         // Start thread
         running = true;
         notifier.start();
@@ -75,25 +86,56 @@ public class OnlineServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // This a Tomcat specific - makes request asynchronous
-        request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
 
-        // Set header fields
+        // This is for loading home page when user comes for the first time
+//        if (request.getParameter("index") != null) {
+//            //request.setAttribute("messages", messageStore);
+//            request.getRequestDispatcher("/online.jsp?room="+request.getParameter("room")).forward(request, response);
+//            return;
+//        }
 
-        final AsyncContext ac = request.startAsync();
-        ac.setTimeout(60 * 1000);
-        ac.addListener(new AsyncListener() {
-            @Override public void onComplete(AsyncEvent event) throws
-                    IOException {asyncContexts.remove(ac);}
-            @Override public void onTimeout(AsyncEvent event) throws
-                    IOException {asyncContexts.remove(ac);}
-            @Override public void onError(AsyncEvent event) throws
-                    IOException {asyncContexts.remove(ac);}
-            @Override public void onStartAsync(AsyncEvent event) throws
-                    IOException {}
-        });
-        asyncContexts.add(ac);
-        request.getRequestDispatcher("/online.jsp").forward(request, response);
+        int room = Integer.parseInt(request.getParameter("room"));
+
+        if ("text/event-stream".equals(request.getHeader("Accept"))) {
+            System.out.println(room);
+            // This a Tomcat specific - makes request asynchronous
+            request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
+
+            // Set header fields
+
+            final AsyncContext ac = request.startAsync();
+            ac.setTimeout(60 * 1000);
+            ac.addListener(new AsyncListener() {
+                @Override
+                public void onComplete(AsyncEvent event) throws
+                        IOException {
+                    asyncContexts.remove(ac);
+                }
+
+                @Override
+                public void onTimeout(AsyncEvent event) throws
+                        IOException {
+                    asyncContexts.remove(ac);
+                }
+
+                @Override
+                public void onError(AsyncEvent event) throws
+                        IOException {
+                    asyncContexts.remove(ac);
+                }
+
+                @Override
+                public void onStartAsync(AsyncEvent event) throws
+                        IOException {
+                }
+            });
+            asyncContexts.get(room).add(ac);
+
+            sendMessage(ac.getResponse().getWriter(), roomMsg.get(room));
+
+
+            request.getRequestDispatcher("/online.jsp").forward(request, response);
+        }
     }
 
     @Override
@@ -110,20 +152,18 @@ public class OnlineServlet extends HttpServlet {
 //        out.close();
 
 
-
         // Set header fields
 //        response.setContentType("text/event-stream");
 //        response.setHeader("Cache-Control", "no-cache");
 //        response.setHeader("Connection", "keep-alive");
 //        response.setCharacterEncoding("UTF-8");
 
-
-
+        int room = Integer.parseInt(request.getParameter("room"));
         String message = request.getParameter("msg");
-
+        roomMsg.put(room, message);
         System.out.println("m: " + message);
         try {
-            messageQueue.put(message);
+            messageQueue.put(room + message);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

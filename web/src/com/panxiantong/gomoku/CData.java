@@ -1,6 +1,7 @@
 package com.panxiantong.gomoku;
 
 import java.util.*;
+import java.util.concurrent.CountedCompleter;
 
 import static com.panxiantong.gomoku.Constants.*;
 
@@ -22,13 +23,14 @@ public class CData {
     //board data: 1: black, 2: white, 0: blank, -1: out bound
     private int[][] board = new int[size + 8][size + 8];
 
+
     // around with -1
     //private int[][] conBlack = new int[size + 8][size + 8];
 
     // around with 1
     //private int[][] conWhite = new int[size + 8][size + 8];
 
-    private Map<Pos, Type> typeMap = new HashMap<>();
+    protected Map<Pos, Type> typeMap = new HashMap<>();
 
     // Initialize with a blank board
     public CData() {
@@ -297,6 +299,11 @@ public class CData {
     // }
     //
     // }
+
+//    public Type getType(){
+//
+//    }
+
 
     public boolean isWin() {
         return false;

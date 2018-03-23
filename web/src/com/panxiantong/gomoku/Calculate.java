@@ -640,9 +640,29 @@ public class Calculate {
 //        }
 //    }
 
+    public static Pos vcf(CData d, int side) {
+        return null;
+    }
+
     public static void main(String[] args) {
-        System.out.println(3 * 3 * 3 * 3 * 3 * 3 * 3 * 3 * 3);
-        System.out.println(chess_type0.values());
+
+        CData d = new CData("00,77");
+
+        //Type t = Type.getType(d.getBoard(), new Pos(7, 8));
+        //d.typeMap
+
+
+//
+//        for (int i = 0; i < 5; i++) {
+//            d = new CData(Tool.runExe(Calculate.engine_wine, "00,"+d.toString()));
+//            d.append(d.getBestPosition());
+//        }
+//
+//        System.out.println(d.toString());
+
+
+        //System.out.println(3 * 3 * 3 * 3 * 3 * 3 * 3 * 3 * 3);
+        //System.out.println(chess_type0.values());
         // ChessData d = new
         // ChessData("00,77,86,76,85,75,74,78,79,87,97,96,a7,69,a6,a5");
         // System.out.println(Arrays.toString(getType(d, new Pos(7, 7))));

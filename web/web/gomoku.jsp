@@ -20,7 +20,9 @@
 
 <%
     String msg = request.getParameter("msg");
-    if (msg == null || msg == "") {
+
+    // if this page is accessed without msg
+    if (msg == null || msg.trim().isEmpty()) {
         msg = "00";
     }
 %>
@@ -39,8 +41,8 @@
 
         let data = "<%=msg%>";
 
-        let s = data.split(",");
-        let arr1 = getArr(s);
+        //let s = data.split(",");
+        let arr1 = getArr(data, 1);
 
         let whoWin = data.charAt(0);
         let engine = data.charAt(1);
@@ -82,29 +84,29 @@
                 let x = parseInt((p.mouseX - init_x + grid_size / 2) / grid_size);
                 let y = parseInt((p.mouseY - init_y + grid_size / 2) / grid_size);
 
-                let xy = x.toString(16) + y.toString(16);
-                if (!contains(s, xy) && x < board_size && x >= 0 && y < board_size && y >= 0) {
+
+                if (!contains(arr1, 16 * x + y) && x < board_size && x >= 0 && y < board_size && y >= 0) {
 
                     arr1.push(16 * x + y);
                     information = "computing...";
 
                     p.redraw();
-                    //location.href = "CalcServlet?msg=" + data + "," + xy;
                     let xmlhttp = new XMLHttpRequest();
                     xmlhttp.onreadystatechange = function () {
                         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 
                             data = xmlhttp.responseText;
-
-                            s = data.split(",");
-                            arr1 = getArr(s);
+                            arr1 = getArr(data, 1);
                             whoWin = data.charAt(0);
                             information = "It's your turn";
                             p.redraw();
                         }
                     };
-                    xmlhttp.open("GET", "CalcServlet?msg=" + data + "," + xy, true);
-                    xmlhttp.send();
+                    let xy = x.toString(16) + y.toString(16);
+                    //xmlhttp.open("GET", "CalcServlet?msg=" + data + "," + xy, true);
+                    xmlhttp.open("POST", "CalcServlet", true);
+                    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xmlhttp.send("msg=" + data + "," + xy);
                 }
             }
         }

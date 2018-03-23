@@ -15,19 +15,13 @@ import java.io.PrintWriter;
 @WebServlet(name = "CalcServlet", urlPatterns = "/CalcServlet")
 public class CalcServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("dopost");
 
-    }
-
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-     * response)
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         // s is the string chess data for transmitting.
         String s = request.getParameter("msg");
-        if (s == null || s.length() == 0) {
+        //System.out.println(s);
+        if (s == null || s.trim().isEmpty()) {
             s = "00";
         }
 
@@ -50,7 +44,7 @@ public class CalcServlet extends HttpServlet {
             if (d.length() == 0) {
                 d.append(7, 7);
             } else {
-                System.out.println(d.length() + "," + s);
+                System.out.println(d.length() + ": " + s);
 
                 if (s.charAt(1) == '0') {
                     // internal simple engine
@@ -83,6 +77,17 @@ public class CalcServlet extends HttpServlet {
             }
         }
         out.flush();
+
+
+    }
+
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     * response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        System.out.println("you should not see doGet");
     }
 
 }

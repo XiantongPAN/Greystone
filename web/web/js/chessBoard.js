@@ -13,17 +13,26 @@ function contains(arr, obj) {
     return false;
 }
 
-function getArr(s) {
-    let arr = new Array(s.length-1);
-    for (let i = 1; i < s.length; i++) {
-        arr[i-1] = parseInt(s[i], 16);
+// function getArr(data) {
+//     let s = data.split(",");
+//     let arr = new Array(s.length - 1);
+//     for (let i = 1; i < s.length; i++) {
+//         arr[i - 1] = parseInt(s[i], 16);
+//     }
+//     return arr;
+// }
+
+function getArr(data, t) {
+    let s = data.split(",");
+    let arr = new Array(s.length - t);
+    for (let i = t; i < s.length; i++) {
+        arr[i - t] = parseInt(s[i], 16);
     }
     return arr;
 }
 
 
-
-function drawBoard(p, arr1) {
+function drawBoard(p, arr) {
     p.fill(120, 120, 120);
     p.rect(0, 0, p.height, p.width);
 
@@ -51,14 +60,14 @@ function drawBoard(p, arr1) {
     }
 
     // Draw chess
-    for (let i = 0; i < arr1.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
         if (i % 2 === 0) {
             p.fill(0);
         } else {
             p.fill(255);
         }
-        let x = parseInt(arr1[i] / 16) * grid_size + init_x;
-        let y = (arr1[i] % 16) * grid_size + init_y;
+        let x = parseInt(arr[i] / 16) * grid_size + init_x;
+        let y = (arr[i] % 16) * grid_size + init_y;
 
         p.ellipse(x, y, 40, 40);
 

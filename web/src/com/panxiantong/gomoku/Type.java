@@ -47,7 +47,7 @@ public class Type {
 
     }
 
-    public int getScore(int who){
+    public int getScore(int who) {
 
         //TODO: optimize
         int value = 0;
@@ -149,6 +149,21 @@ public class Type {
     }
 
 
+    public boolean isLevel4(int side) {
+        if (side == 1) {
+            for (int i : black) {
+                //if(i)
+            }
+        } else if (side == 2) {
+            for (int i : white) {
+
+            }
+        } else {
+            throw new IllegalArgumentException("the side should be 1 or 2");
+        }
+        return false;
+
+    }
 
 
     @Override

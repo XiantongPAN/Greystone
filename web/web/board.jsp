@@ -17,7 +17,6 @@
 <body>
 
 
-
 <canvas id="canvas1" width="900" height="900"></canvas>
 <p id="data">data</p>
 
@@ -30,26 +29,21 @@
 
 
         let data = "77,86,87,97,a8,88,a6,a5,75,76,66,57,79,78,58,a9,95,84,85,b7,c7";
-        let s = data.split(",");
-        let arr1 = new Array(s.length);
+        //let s = data.split(",");
+        let arr0 = getArr(data, 0);
 
 
         //let information = "";
 
-        for (let i = 0; i < s.length; i++) {
-            arr1[i] = parseInt(s[i], 16);
-
-        }
 
         p.setup = function () {
             p.size(900, 900);
         };
 
         p.draw = function () {
-            drawBoard(p, arr1);
+            drawBoard(p, arr0);
 
         };
-
 
 
         p.mousePressed = function () {
@@ -57,13 +51,13 @@
                 let x = parseInt((p.mouseX - init_x + grid_size / 2) / grid_size);
                 let y = parseInt((p.mouseY - init_y + grid_size / 2) / grid_size);
 
-                if (!contains(arr1, 16 * x + y) && x < board_size && x >= 0 && y < board_size && y >= 0) {
+                if (!contains(arr0, 16 * x + y) && x < board_size && x >= 0 && y < board_size && y >= 0) {
                     data = data + "," + x.toString(16) + y.toString(16);
-                    arr1.push(16 * x + y);
+                    arr0.push(16 * x + y);
                 }
-            } else if (p.mouseButton === p.RIGHT && arr1.length > 0) {
+            } else if (p.mouseButton === p.RIGHT && arr0.length > 0) {
                 data = data.substring(0, data.length - 3);
-                arr1.pop();
+                arr0.pop();
             }
             document.getElementById("data").innerHTML = data;
             p.redraw();
