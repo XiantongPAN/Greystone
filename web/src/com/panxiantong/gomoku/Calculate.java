@@ -18,7 +18,7 @@ public class Calculate {
      *
      * @see <a href = https://stackoverflow.com/questions/2161054>stackoverflow</a>
      */
-    private static final String workingPath = "C:/data/";
+    private static final String workingPath = "/Users/mac/IdeaProjects/Greystone/web/data/";
 
     public static final Map<String, String> chess_type = Tool.importType(workingPath + "TypeTable.txt");
 
