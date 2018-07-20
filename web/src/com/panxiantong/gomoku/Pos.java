@@ -5,17 +5,12 @@ import static com.panxiantong.gomoku.Constants.*;
 /**
  * An integer point representing a location {@code (x,y)} in the chess board.
  */
-public class Pos implements java.io.Serializable {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+public class Pos {
 
     /**
      * The X coordinate of this <code>Point</code>. If no X coordinate is set it
      * will default to 0.
      *
-     * @serial
      */
     protected int x;
 
@@ -23,7 +18,7 @@ public class Pos implements java.io.Serializable {
      * The Y coordinate of this <code>Point</code>. If no Y coordinate is set it
      * will default to 0.
      *
-     * @serial
+     *
      */
     protected int y;
 
@@ -110,6 +105,15 @@ public class Pos implements java.io.Serializable {
         // no need to throw exceptions as it will be done in d[x][y].
         return d[x][y];
     }
+
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
+    }
+
 
 
     /**

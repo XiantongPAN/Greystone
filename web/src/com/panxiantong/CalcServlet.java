@@ -20,13 +20,13 @@ public class CalcServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         // s is the string chess data for transmitting.
         String s = request.getParameter("msg");
-        //System.out.println(s);
+        //System.out.println("s=" + s);
         if (s == null || s.trim().isEmpty()) {
             s = "00";
         }
 
         CData d = new CData(s);// d = parse s to ChessData object
-
+        //System.out.println("is win:" + Calculate.isWin(d));
         if (Calculate.isWin(d)) {
             // the client pass a win data.
 
@@ -35,7 +35,7 @@ public class CalcServlet extends HttpServlet {
 
             // show end game information
             //goWith(d.getFinalSide(), s, d, request, response);
-            out.println(d.getFinalSide() + s.substring(1, 2) + "," + d.toString());
+            out.print(d.getFinalSide() + s.substring(1, 2) + "," + d.toString());
 
         } else {
 
@@ -69,14 +69,16 @@ public class CalcServlet extends HttpServlet {
 
                 // show end game information
                 //goWith(d.getFinalSide(), s, d, request, response);
-                out.println(d.getFinalSide() + s.substring(1, 2) + "," + d.toString());
+                out.print(d.getFinalSide() + s.substring(1, 2) + "," + d.toString());
             } else {
                 // not win yet
                 // goWith(0, s, d, request, response);
-                out.println(0 + s.substring(1, 2) + "," + d.toString());
+
+                //System.out.println(0 + s.substring(1, 2) + "," + d.toString());
+                out.print(0 + s.substring(1, 2) + "," + d.toString());
             }
         }
-        out.flush();
+        //out.flush();
 
 
     }

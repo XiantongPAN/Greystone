@@ -641,6 +641,9 @@ public class Calculate {
 //    }
 
     public static Pos vcf(CData d, int side) {
+
+        //for(d.typeMap.)
+
         return null;
     }
 

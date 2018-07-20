@@ -1,7 +1,6 @@
 package com.panxiantong.gomoku;
 
 import java.util.*;
-import java.util.concurrent.CountedCompleter;
 
 import static com.panxiantong.gomoku.Constants.*;
 

@@ -17,13 +17,13 @@
 <%--%>--%>
 <body>
 
-<h3>
+<h1 align="center">
     <a href="board.jsp">a new board</a><br>
     <a href="gomoku.jsp?msg=00">a simple engine</a> <br>
     <a href="gomoku.jsp?msg=01">an advanced engine</a><br><br>
 
     <a href="lobby.jsp">online game </a>
-</h3>
+</h1>
 
 <%--<form action="online.jsp" method="get">--%>
 <%--<h3>start an online game</h3>--%>
