@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="web:Web exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/web_Web_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="web/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="web" />
+          <element id="dir-copy" path="$PROJECT_DIR$/apache-tomcat-9.0.8" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="lib" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/web/WEB-INF/lib/javax.websocket-api-1.0.jar" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

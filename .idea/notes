@@ -1,0 +1,7 @@
+mac下tomcat启动报错
+Cannot run program "/Users/horse_leo/Documents/
+apache-tomcat-7.0.75/bin/catalina.sh" (in directory
+ "/Users/horse_leo/Documents/apache-tomcat-8.0.18/bin")
+ : error=13, Permission denied
+
+命令行进入tomcat的bin根目录，执行chmod 777 *.sh问题解决
