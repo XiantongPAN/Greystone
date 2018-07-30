@@ -118,7 +118,7 @@ public class Type {
                             sb.append(2);
                         } else if (value == 0) {
                             sb.append(0);
-                        } else {
+                        } else {// value = 1 or 2
                             sb.append(3 - value);
                         }
                     }

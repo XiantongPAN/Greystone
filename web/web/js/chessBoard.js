@@ -3,33 +3,46 @@ const init_y = 50;
 const grid_size = 50;
 const board_size = 15;
 
-function contains(arr, obj) {
-    let i = arr.length;
-    while (i--) {
-        if (arr[i] === obj) {
-            return true;
-        }
-    }
-    return false;
-}
-
-// function getArr(data) {
+// function getArr(data, t) {
 //     let s = data.split(",");
-//     let arr = new Array(s.length - 1);
-//     for (let i = 1; i < s.length; i++) {
-//         arr[i - 1] = parseInt(s[i], 16);
+//     let arr = new Array(s.length - t);
+//     for (let i = t; i < s.length; i++) {
+//         arr[i - t] = parseInt(s[i], 16);
 //     }
 //     return arr;
 // }
 
-function getArr(data, t) {
-    let s = data.split(",");
-    let arr = new Array(s.length - t);
-    for (let i = t; i < s.length; i++) {
-        arr[i - t] = parseInt(s[i], 16);
+function draw0(p, arr) {
+    p.fill(255);
+    p.rect(0, 0, p.height, p.width);
+
+    p.fill(0);
+    p.line(grid_size * 7 + init_x, init_y, grid_size * 7 + init_x, grid_size * (board_size - 1) + init_y);
+    p.line(init_x, grid_size * 7 + init_y, grid_size * (board_size - 1) + init_x, grid_size * 7 + init_y);
+
+
+    // Draw chess
+    for (let i = 0; i < arr.length; i++) {
+
+        //let x = parseInt(arr[i] / 16) * grid_size + init_x;
+        //let y = (arr[i] % 16) * grid_size + init_y;
+        let x = arr[i].x * grid_size + init_x;
+        let y = arr[i].y * grid_size + init_y;
+
+        p.fill(0);
+        if (i < 9) {
+            p.textSize(30);
+        } else if (i < 99) {
+            p.textSize(24);
+        } else {
+            p.textSize(18);
+        }
+        p.textAlign(p.CENTER, p.CENTER);
+        p.text(i + 1 + "", x, y);
     }
-    return arr;
+
 }
+
 
 
 function drawBoard(p, arr) {
@@ -66,8 +79,10 @@ function drawBoard(p, arr) {
         } else {
             p.fill(255);
         }
-        let x = parseInt(arr[i] / 16) * grid_size + init_x;
-        let y = (arr[i] % 16) * grid_size + init_y;
+        //let x = parseInt(arr[i] / 16) * grid_size + init_x;
+        //let y = (arr[i] % 16) * grid_size + init_y;
+        let x = arr[i].x * grid_size + init_x;
+        let y = arr[i].y * grid_size + init_y;
 
         p.ellipse(x, y, 40, 40);
 

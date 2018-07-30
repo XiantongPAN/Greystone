@@ -1,5 +1,9 @@
 package com.panxiantong.gomoku;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.*;
 
@@ -114,6 +118,21 @@ public class Tool {
         }
 
         return output;
+
+    }
+
+    public static JsonObject readJSONData(HttpServletRequest request) {
+        StringBuffer json = new StringBuffer();
+        String lineString = null;
+        try {
+            BufferedReader reader = request.getReader();
+            while ((lineString = reader.readLine()) != null) {
+                json.append(lineString);
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return new JsonParser().parse(json.toString()).getAsJsonObject();
 
     }
 

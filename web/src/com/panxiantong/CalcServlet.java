@@ -75,6 +75,7 @@ public class CalcServlet extends HttpServlet {
                 // goWith(0, s, d, request, response);
 
                 //System.out.println(0 + s.substring(1, 2) + "," + d.toString());
+                //out.print(0 + s.substring(1, 2) + "," + d);
                 out.print(0 + s.substring(1, 2) + "," + d.toString());
             }
         }

@@ -18,9 +18,11 @@
 <body>
 
 <h1 align="center">
+    <a href="gui_board.jsp">gui board</a><br>
     <a href="board.jsp">a new board</a><br>
     <a href="gomoku.jsp?msg=00">a simple engine</a> <br>
     <a href="gomoku.jsp?msg=01">an advanced engine</a><br><br>
+    <a href="read_lib.jsp">read lib</a>
 
     <a href="lobby.jsp">online game </a>
 </h1>

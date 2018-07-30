@@ -19,7 +19,9 @@ public class CData {
      */
     private List<Pos> dataSequence = new ArrayList<>();
 
-    //board data: 1: black, 2: white, 0: blank, -1: out bound
+    /**
+     * board data: 1: black, 2: white, 0: blank, -1: out bound
+     */
     private int[][] board = new int[size + 8][size + 8];
 
 
@@ -29,98 +31,92 @@ public class CData {
     // around with 1
     //private int[][] conWhite = new int[size + 8][size + 8];
 
-    protected Map<Pos, Type> typeMap = new HashMap<>();
+    /**
+     * {7,8}->Type <br/>
+     * package private
+     */
+    Map<Pos, Type> typeMap = new HashMap<>();
 
     // Initialize with a blank board
     public CData() {
         for (int i = 0; i < board.length; i++) { // board.length == 15 + 8
             for (int j = 0; j < board.length; j++) {
-                Pos p = new Pos(i, j);
-                if (!(p.plus(-4).inRect())) {
+                Pos p = new Pos(i, j).plus(-4);
+                if (!p.inRect()) {
                     setBoard(p, -1);
-                    //setConWhite(p, -1);
                 }
             }
         }
     }
 
-    // Initialize with the first point
+    /**
+     * Initialize with the first point
+     */
     public CData(Pos p) {
         this();
         append(p);
     }
 
     /**
-     * "hd,77,a0"->{{7,7},{10,0}}. hd is header, omit it
-     *
-     * @param ss
+     * Initialize from string
+     * "77,a0"->[{7,7},{10,0}].
      */
-    public CData(String ss) {
+    public CData(String s) {
         this();
-        if (ss == null || ss.length() < 4) {
+//        if (ss == null || ss.length() < 4) {
+//            return;
+//        }
+//        for (String s : ss.substring(3, ss.length()).split(",")) {
+//            // dataSequence.add(new Pos(s));
+//            append(new Pos(s));
+//        }
+        if (s == null) {
             return;
         }
-        for (String s : ss.substring(3, ss.length()).split(",")) {
-            // dataSequence.add(new Pos(s));
-            append(new Pos(s));
+        for (String p : s.split(",")) {
+            append(new Pos(p));
         }
-        // len = dataSequence.size();
-        // cons = Calculate.construct(dataSequence, 4, -1);
-
-        //TODO: rewrite using CData(List<Pos> a)
     }
 
-    // Initialize with a given point list
+    /**
+     * Initialize with a given point list
+     */
     public CData(List<Pos> a) {
-        len = a.size();
+        this();
+        if (a == null) {
+            return;
+        }
+        for (Pos p : a) {
+            append(p);
+        }
+        //len = a.size();
 
         // dataSequence = a;
-        dataSequence.addAll(a);
+        //dataSequence.addAll(a);
 
         // TODO: calculate board and typemap
     }
 
-//    private void setConBlack(Pos p, int i) {
-//        conBlack[p.x][p.y] = i;
-//    }
-//
-//    private void setConWhite(Pos p, int i) {
-//        conWhite[p.x][p.y] = i;
-//    }
-//
-//    public int[][] getConBlack() {
-//
-//        return conBlack;
-//    }
-//
-//    public int[][] getConWhite() {
-//
-//        return conWhite;
-//    }
 
     private void setBoard(Pos p, int i) {
-        board[p.x][p.y] = i;
+        board[p.x + 4][p.y + 4] = i;
     }
 
-    public int getBoard(Pos p) {
+
+    private int getBoard(Pos p) {
         return board[p.x + 4][p.y + 4];
     }
 
+    public int getBoard(int x, int y) {
+        return getBoard(new Pos(x, y));
+    }
+
     public int[][] getBoard() {
-//        int[][] bd = new int[15][15];
-//        for (int i = 0; i < bd.length; i++) {
-//            for (int j = 0; j < bd.length; j++) {
-//                bd[i][j] = board[i + 4][j + 4];
-//            }
-//        }
-//        return bd;
         return board;
     }
 
     /**
      * get data sequence
-     *
-     * @return
      */
     public List<Pos> getData() {
         return dataSequence;
@@ -142,70 +138,41 @@ public class CData {
         }
     }
 
+    /**
+     * @return length
+     */
     public int length() {
         return len;
     }
 
+    /**
+     * @return last move, 1 is black, 2 is white
+     */
     public int getFinalSide() {
         return 2 - (len % 2);
     }
 
-    // return CData to append more than one time
+    /**
+     * return CData to append more than one time
+     */
     public CData append(Pos p) {
 
-        // len
+        // length
         len++;
 
         // dataSequence
         dataSequence.add(p);
 
-        // cons
-//        if (len % 2 == 0) {
-//            setConWhite(p.plus(4), 1);
-//            setConBlack(p.plus(4), -1);
-//        } else {
-//            setConWhite(p.plus(4), -1);
-//            setConBlack(p.plus(4), 1);
-//        }
-
         //set board
-        setBoard(p.plus(4), getFinalSide());
+        setBoard(p, getFinalSide());
 
         // typeMap
 
         // remove 1 pos
         // for former steps, type map may contains p already.
-        if (typeMap.containsKey(p)) {
-            typeMap.remove(p);
-        }
+        typeMap.remove(p);
 
-        // update at most 8 * 4 = 32 pos
-        // find the neighbor4 points. collect with set.
-        Set<Pos> posSet = new HashSet<>();
-        for (Pos dir : dir8) {
-            for (int n = 1; n <= 4; n++) {
-                Pos pos = dir.times(n).plus(p);
-                if (pos.inRect()) {
-                    posSet.add(pos);
-                    // typeMap.put(pos, Calculate.getType(this, pos));
-                }
-            }
-        }
-        posSet.removeAll(dataSequence);
-
-
-        // calculate type for each points
-        Iterator<Pos> iterator = posSet.iterator();
-        while (iterator.hasNext()) {
-            Pos pos = iterator.next();
-
-            // no need to check
-            if (getBoard(pos) != 0) {
-                throw new NoSuchElementException(dataSequence.toString());
-            }
-
-            typeMap.put(pos, Type.getType(board, pos));
-        }
+        Calculate.updateTypeMap(this, p);
         return this;
     }
 
@@ -213,12 +180,10 @@ public class CData {
         return append(new Pos(x, y));
     }
 
-    public void prepend(Pos p) {
-        len++;
-        dataSequence.add(0, p);
-        // TODO: reconstruct
-        // cons = Calculate.construct(dataSequence, 4, -1);
-    }
+//    public void prepend(Pos p) {
+//        len++;
+//        dataSequence.add(0, p);
+//    }
 
     // drop the last data
     public CData drop() {
@@ -226,10 +191,11 @@ public class CData {
 
         Pos p = dataSequence.remove(len);
 
-        setBoard(p.plus(4), 0);
+        setBoard(p, 0);
 
 
-        // TODO: type map
+        typeMap.put(p, Type.getType(getBoard(), p));
+        Calculate.updateTypeMap(this, p);
 
         return this;
     }
@@ -238,8 +204,9 @@ public class CData {
     public CData drop(int n) {
         int N = Tool.trim(n, 0, len);
 
-        for (int i = 0; i < N; i++) {
+        while (N > 0) {
             drop();
+            N--;
         }
         return this;
     }
@@ -402,14 +369,14 @@ public class CData {
     // Test
     public static void main(String[] args) {
         CData d = new CData("00,77,86,88,66,78,76,96,87,98");
-
+        System.out.println(d.append(d.getBestPosition()));
 
 //        for (int i = 0; i < 20; i++) {
 //            d.append(d.getBestPosition());
 //        }
-        System.out.println(d.getValue(new Pos(10,8)));
+        System.out.println(d.getValue(new Pos(10, 8)));
 
-        System.out.println(d.typeMap.get(new Pos(10,8)));
+        System.out.println(d.typeMap.get(new Pos(10, 8)));
 
         //System.out.println(Arrays.toString(d.board[4]));
         //System.out.println(d.typeMap.get(new Pos(1, 1)));

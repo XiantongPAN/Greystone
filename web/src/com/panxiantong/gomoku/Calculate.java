@@ -73,23 +73,23 @@ public class Calculate {
 //    }
 
     public static int[][] construct(List<Pos> dataSequence, int n, int padding) {
-        int[][] output = new int[size + 2 * n][size + 2 * n]; // all 0's
+        int[][] board = new int[size + 2 * n][size + 2 * n]; // all 0's
 
         for (int i = 0; i < dataSequence.size(); i++) {
             Pos p = dataSequence.get(i);
             if (p.inRect(0, 0, size, size)) {
-                output[p.x + n][p.y + n] = 2 * ((i + dataSequence.size() + 1) % 2) - 1;
+                board[p.x + n][p.y + n] = 2 - (i % 2);//2 * ((i + dataSequence.size() + 1) % 2) - 1;
             }
         }
-        for (int i = 0; i < output.length; i++) {
-            for (int j = 0; j < output.length; j++) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
                 if (!(new Pos(i, j).plus(-n).inRect(0, 0, size, size))) {
-                    output[i][j] = padding;
+                    board[i][j] = padding;
                 }
             }
         }
 
-        return output;
+        return board;
     }
 
 //    /**
@@ -370,7 +370,7 @@ public class Calculate {
     }
 
     /**
-     * analysising the four type
+     * analyze the four type
      *
      * @param type
      * @return
@@ -639,6 +639,33 @@ public class Calculate {
 //
 //        }
 //    }
+
+    public static void updateTypeMap(CData d, Pos p){
+        // update at most 8 * 4 = 32 pos
+        // find the neighbor4 points. collect with set.
+        Set<Pos> posSet = new HashSet<>();
+        for (Pos dir : dir8) {
+            for (int n = 1; n <= 4; n++) {
+                Pos pos = dir.times(n).plus(p);
+                if (pos.inRect()) {
+                    posSet.add(pos);
+                }
+            }
+        }
+        posSet.removeAll(d.getData());
+
+
+        // calculate type for each points
+        for (Pos pos : posSet) {
+
+            // no need to check
+            if (d.getBoard(pos) != 0) {
+                throw new NoSuchElementException(d.getData().toString());
+            }
+
+            d.typeMap.put(pos, Type.getType(d.getBoard(), pos));
+        }
+    }
 
     public static Pos vcf(CData d, int side) {
 

@@ -47,5 +47,17 @@
     </orderEntry>
     <orderEntry type="library" name="annotations-api" level="project" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="core" level="project" />
+    <orderEntry type="library" name="gson-2.8.5-javadoc" level="project" />
+    <orderEntry type="library" name="gson-2.8.5" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/redist/annotations-java8.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

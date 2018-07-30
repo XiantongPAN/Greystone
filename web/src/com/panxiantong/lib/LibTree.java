@@ -1,15 +1,19 @@
 package com.panxiantong.lib;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
+import java.util.*;
 
+import com.panxiantong.gomoku.CData;
 import com.panxiantong.gomoku.CNode;
+import com.panxiantong.gomoku.Pos;
 import com.panxiantong.gomoku.Tool;
 
 public class LibTree {
     private byte[] lib;
 
     private int index;
+
+    //public CNode<LibElement> tree;
 
     public LibTree(String s) {
 
@@ -239,39 +243,65 @@ public class LibTree {
         return s;
     }
 
+    public static Map<Pos, String> getInfo(String dir, CData d) {
+        LibTree lt = new LibTree(dir);
+        CNode<LibElement> tree = lt.readLib();
+        for (Pos p : d.getData()) {
+            boolean flag = true;
+            for (CNode<LibElement> c : tree.getChildren()) {
+
+                if (flag && c.getData().getPoint().equals(p)) {
+                    tree = c;
+                    flag = false;
+                }
+            }
+            //System.out.println("getInfo: " + p);
+        }
+        //System.out.println(tree.getData());
+        Map<Pos, String> result = new HashMap<>();
+        for (CNode<LibElement> t : tree.getChildren()) {
+            String text = t.getData().getText();
+            if(text == null || text.equals("")){
+                result.put(t.getData().getPoint(), "x");
+            }else{
+                result.put(t.getData().getPoint(), text);
+            }
+
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
-        String s = "C:\\Users\\xiant\\Dropbox\\wzq\\山口打点（科普版）.lib";
-        String s2 = "E:\\五子棋\\lib\\第一届神龙杯.lib";
-        // System.out.println(getBeginningIndex(Tool.readFileByBytes(s2)));
-
-        LibTree lt = new LibTree(s2);
+        String dr = "/Users/mac/Dropbox/wzq/";
+        String s = dr + "b.lib";
+        LibTree lt = new LibTree(s);
         byte[] bs = lt.lib;
+        //System.out.println(Arrays.toString(bs));
+        CNode<LibElement> tree = lt.readLib();
+        CData d = new CData("00,77,67,68");
+        System.out.println(tree.getChild(0).getData().getPoint());
+        System.out.println(tree.getChild(0).getChild(0).getData().getPoint());
+        System.out.println(tree.getChild(0).getChild(0).getChild(0).getData().getPoint());
+        System.out.println(tree.getChild(0).getChild(0).getChild(0).getChildren().size());
 
-        lt.readLib();
 
-        System.out.println(bs[23]);
-        System.out.println(bs[24]);
-        System.out.println(bs[25]);
-        System.out.println(bs[26]);
-        System.out.println(bs[27]);
-        System.out.println(bs[28]);
-        System.out.println(bs[29]);
-        System.out.println(bs[30]);
-        // CNode<LibElement> tree = new LibTree(s2).readLib();
-        System.out.println(toGBK(bs, 22, 32));
-        // tree.getSize()
-        // byte b[] = Tool.readFile(s);
-        // System.out.println("," + tree.getData());
-        // String c = null;
-        // try {
-        // c = new String(Arrays.copyOfRange(b, 6, 200), "gbk");
-        // } catch (UnsupportedEncodingException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // System.out.println(c);
-        // UsingProcessing.main(args);
-        // PApplet.main(new UsingProcessing().getClass().getName());
+//        System.out.println(tree.getChild(0).getChildren().size());
+//         System.out.println(getInfo(s, new CData("00,77,68")));
+//
+//        System.out.println(tree.getChild(0).getChild(0).getData().getText());
+//
+//
+//        System.out.println(bs[23]);
+//        System.out.println(bs[24]);
+//        System.out.println(bs[25]);
+//        System.out.println(bs[26]);
+//        System.out.println(bs[27]);
+//        System.out.println(bs[28]);
+//        System.out.println(bs[29]);
+//        System.out.println(bs[30]);
+//
+//        System.out.println(toGBK(bs, 22, 32));
 
     }
 }

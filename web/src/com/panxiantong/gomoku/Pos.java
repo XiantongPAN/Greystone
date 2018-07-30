@@ -1,11 +1,13 @@
 package com.panxiantong.gomoku;
 
+import com.panxiantong.alphabeta.Move;
+
 import static com.panxiantong.gomoku.Constants.*;
 
 /**
- * An integer point representing a location {@code (x,y)} in the chess board.
+ * Two integers representing a location {@code (x,y)} in the chess board.
  */
-public class Pos {
+public class Pos implements Move {
 
     /**
      * The X coordinate of this <code>Point</code>. If no X coordinate is set it
@@ -76,10 +78,11 @@ public class Pos {
     }
 
     /**
-     * @return a string representation of this point
+     * @return a string representation of this point (JSON form)
      */
+    @Override
     public String toString() {
-        return "(" + x + ", " + y + ")";
+        return "{\"x\":" + x + ", \"y\":" + y + "}";
     }
 
 
