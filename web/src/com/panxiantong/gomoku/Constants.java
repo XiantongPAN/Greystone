@@ -5,6 +5,11 @@ public class Constants {
     private Constants() {
     }
 
+    /**
+     * TODO: make it compatible in mac, win, and server.
+     */
+    public static final String DB_DIR = "/Users/mac/IdeaProjects/Greystone/database/";
+
     public static final int size = 15;
     // public static final int Row = 15;
     // public static final int Column = 15;

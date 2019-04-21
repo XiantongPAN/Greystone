@@ -1,6 +1,6 @@
 package com.panxiantong.lib;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.*;
 
 import com.panxiantong.gomoku.CData;
@@ -13,7 +13,13 @@ public class LibTree {
 
     private int index;
 
+    public CNode<LibElement> tree0;
+
     //public CNode<LibElement> tree;
+
+    public LibTree(CNode<LibElement> tree){
+        tree0 = tree;
+    }
 
     public LibTree(String s) {
 
@@ -23,7 +29,16 @@ public class LibTree {
         index = getBeginningIndex(lib);
     }
 
-    private static int getBeginningIndex(byte[] lib) {
+    /**
+     * the beginning part of the lib:
+     * FF
+     * 52 65 6E 4C 69 62 (RenLib)
+     * FF 03 00 (version3)
+     * FF * 10
+     * 00 00
+     * 78...
+     */
+    public static int getBeginningIndex(byte[] lib) {
         int index = 0;
         while (lib[index] + lib[index + 1] + lib[index + 2] != -3) {
             index++;
@@ -67,7 +82,7 @@ public class LibTree {
         int temp = 0;
 
         while ((n = traverse(tree)) != null) {
-
+            System.out.println("index: " + index);
             // temp = lib[index];
             // while (temp == 0) {// 1 or 2
             // temp = lib[++index];
@@ -83,7 +98,7 @@ public class LibTree {
     }
 
     private void process(CNode<LibElement> tree, int b) {
-
+        //System.out.println("b" + b);
         int startingIndex = index;
         // if (index == 23) {
         // System.out.println("23: " + lib[23] + "," + lib[24]);
@@ -93,13 +108,14 @@ public class LibTree {
         // }
         // int b 代表一个8bit的数据76543210
 
-        // b(7) = 1->exist sibling
-        // b(6) = 1->exist child
-        // b(5) = 0
-        // b(4) = 1->exist label
+        // b(7) = 1 -> exist sibling
+        // b(6) = 0 -> exist child
+        // b(5) = 1 -> exist old comment
+        // b(4) = 1 -> label is true(mark)
         // b(3) = 1 -> exist comment
-        // b(2) = b(1)=0
-        // b(0) = 1->exist text
+        // b(2) = 1 -> start
+        // b(1) = 1 -> no move
+        // b(0) = 1 -> exist text(extension)
 
         if (((b >> 7) & 1) == 1) {
             // exist sibling
@@ -119,14 +135,20 @@ public class LibTree {
 
         if ((b & 0b1001) == 0b1000) {
             // only exist comment
-
-            // commnent can be composed of two parts: comm1 08 comm2
+            // comment 00 '00'
+            // comment can be composed of two parts(line): comm1 08 comm2
 
             int start = index + 1;
-            while ((lib[++index]) != 0 || lib[index + 1] != 0) {
-                // comment[i]=(char) i;
-                if (lib[index] == 8) {
-                    lib[index] = 32;
+//            while ((lib[++index]) != 0 || lib[index + 1] != 0) {
+//                // comment[i]=(char) i;
+//                if (lib[index] == 8) {
+//                    lib[index] = 32;
+//                }
+//            }
+
+            while (lib[++index]!=0) {
+                if(lib[index]==8){
+                    lib[index]=32;//'\n'
                 }
             }
 
@@ -143,7 +165,8 @@ public class LibTree {
                 System.out.println("error1, index: " + index);
             }
             if (lib[++index] != 1) {
-                System.out.println("error2, index: " + index);
+                System.out.println("error2, index: " + index +
+                        ", " + lib[index - 1] + ", " + lib[index] + ", b = " + b);
             }
 
             int start = index + 1;
@@ -158,7 +181,7 @@ public class LibTree {
             // exist text and comment
 
             // 00 01 08 comment 00 text 00 | 00 version1
-            // 00 01 comment 00 00 text 00 | 00 version2
+            // 00 01 comment 00 '00' text 00 | 00 version2
 
             if (lib[++index] != 0) {
                 System.out.println("error3, index: " + index);
@@ -191,15 +214,22 @@ public class LibTree {
                 // version 2
                 System.out.println("version 2");
                 int start = index + 1;
-                while ((lib[++index]) != 0 || lib[index + 1] != 0) {
-                    // comment = comment + (char) i;
+//                while ((lib[++index]) != 0 || lib[index + 1] != 0) {
+//                    // comment = comment + (char) i;
+//                }
+                while((lib[++index]) != 0){
+
                 }
                 String comment = toGBK(lib, start, index);
                 tree.getData().setComment(comment);
 
-                if (lib[++index] != 0) {
-                    System.out.println("error5, index: " + index);
+//                if (lib[++index] != 0) {
+//                    System.out.println("error5, index: " + index);
+//                }
+                if(lib[index+1]==0){
+                    index++;
                 }
+                index--;
                 start = index + 1;
 
                 while ((lib[++index]) != 0) {
@@ -243,15 +273,15 @@ public class LibTree {
         return s;
     }
 
-    public static Map<Pos, String> getInfo(String dir, CData d) {
+    public Map<Pos, String> getInfo(String dir, CData d) {
         LibTree lt = new LibTree(dir);
-        CNode<LibElement> tree = lt.readLib();
+        tree0 = lt.readLib();
         for (Pos p : d.getData()) {
             boolean flag = true;
-            for (CNode<LibElement> c : tree.getChildren()) {
+            for (CNode<LibElement> c : tree0.getChildren()) {
 
                 if (flag && c.getData().getPoint().equals(p)) {
-                    tree = c;
+                    tree0 = c;
                     flag = false;
                 }
             }
@@ -259,11 +289,39 @@ public class LibTree {
         }
         //System.out.println(tree.getData());
         Map<Pos, String> result = new HashMap<>();
-        for (CNode<LibElement> t : tree.getChildren()) {
+        for (CNode<LibElement> t : tree0.getChildren()) {
             String text = t.getData().getText();
-            if(text == null || text.equals("")){
+            if (text == null || text.equals("")) {
                 result.put(t.getData().getPoint(), "x");
-            }else{
+            } else {
+                result.put(t.getData().getPoint(), text);
+            }
+
+        }
+
+        return result;
+    }
+
+    public static Map<Pos, String> getInfo(CNode<LibElement> tree0, CData d) {
+
+        for (Pos p : d.getData()) {
+            boolean flag = true;
+            for (CNode<LibElement> c : tree0.getChildren()) {
+
+                if (flag && c.getData().getPoint().equals(p)) {
+                    tree0 = c;
+                    flag = false;
+                }
+            }
+            //System.out.println("getInfo: " + p);
+        }
+        //System.out.println(tree.getData());
+        Map<Pos, String> result = new HashMap<>();
+        for (CNode<LibElement> t : tree0.getChildren()) {
+            String text = t.getData().getText();
+            if (text == null || text.equals("")) {
+                result.put(t.getData().getPoint(), "x");
+            } else {
                 result.put(t.getData().getPoint(), text);
             }
 
@@ -274,19 +332,19 @@ public class LibTree {
 
     public static void main(String[] args) {
         String dr = "/Users/mac/Dropbox/wzq/";
-        String s = dr + "b.lib";
-        LibTree lt = new LibTree(s);
-        byte[] bs = lt.lib;
-        //System.out.println(Arrays.toString(bs));
-        CNode<LibElement> tree = lt.readLib();
-        CData d = new CData("00,77,67,68");
-        System.out.println(tree.getChild(0).getData().getPoint());
-        System.out.println(tree.getChild(0).getChild(0).getData().getPoint());
-        System.out.println(tree.getChild(0).getChild(0).getChild(0).getData().getPoint());
-        System.out.println(tree.getChild(0).getChild(0).getChild(0).getChildren().size());
+        String s = dr + "B10.lib";
+        //LibTree lt = new LibTree(s);
+        //byte[] bs = lt.lib;
+        //System.out.println(Arrays.toStringR(bs));
+        //CNode<LibElement> tree = lt.readLib();
+
+        //Tool.writeObjectToFile(tree);
+
+        CNode<LibElement> tr =(CNode<LibElement>) Tool.readObjectFromFile();
 
 
-//        System.out.println(tree.getChild(0).getChildren().size());
+        //System.out.println(toGBK(bs, 49, 73));
+     //System.out.println(tr.getChild(0).getChildren().size());
 //         System.out.println(getInfo(s, new CData("00,77,68")));
 //
 //        System.out.println(tree.getChild(0).getChild(0).getData().getText());

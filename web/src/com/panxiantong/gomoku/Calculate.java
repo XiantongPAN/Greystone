@@ -12,29 +12,6 @@ public class Calculate {
     private Calculate() {
     }
 
-    /**
-     * Note the importance of using an absolute path. Relative local disk file
-     * system paths are an absolute no-go in a Java EE web application.
-     *
-     * @see <a href = https://stackoverflow.com/questions/2161054>stackoverflow</a>
-     */
-    private static final String workingPath = "/Users/mac/IdeaProjects/Greystone/web/data/";
-
-    public static final Map<String, String> chess_type = Tool.importType(workingPath + "TypeTable.txt");
-
-    private static Map<String, Integer> score_data0 = Tool.importData(workingPath + "ScoreTable0.txt");
-    private static Map<String, Integer> score_data = Tool.importData(workingPath + "ScoreTable1.txt");
-    private static final Map<String, Integer> score_data1 = Tool.importData(workingPath + "ScoreTable1.txt");
-    private static final Map<String, Integer> score_data2 = Tool.importData(workingPath + "ScoreTable2.txt");
-
-    public static final Map<Integer, Integer> chess_type0 = resolveType(chess_type, 0);
-    private static final Map<Integer, Integer> chess_type1 = resolveType(chess_type, 1);
-    private static final Map<Integer, Integer> chess_type2 = resolveType(chess_type, 2);
-
-    public static final List<Integer> score_1 = Tool.importScore(workingPath + "ScoreTable1.txt");
-    public static final List<Integer> score_2 = Tool.importScore(workingPath + "ScoreTable2.txt");
-
-    public static String engine_wine = workingPath + "wine.exe";
 
 //    public static int[][] construct(ChessData d) {
 //        return construct(d, 0, -1);
@@ -122,7 +99,7 @@ public class Calculate {
     public static boolean isWin(CData d) {
         for (Pos p : d.getData()) {
             if (isWin(d, p)) {
-                System.out.println("win: " + p);
+                //System.out.println("win: " + p);
                 return true;
             }
         }
@@ -151,6 +128,15 @@ public class Calculate {
         return false;
     }
 
+
+    public static Pos vcf0(CData d) {
+        for (var t : d.typeMap.entrySet()) {
+            if (t.getValue().become5()) {
+                return t.getKey();
+            }
+        }
+        return new Pos(-1, -1);
+    }
 //    /**
 //     * Check if win with specific point.
 //     *
@@ -225,77 +211,32 @@ public class Calculate {
     //
     // }
 
-    public static Map<Integer, Integer> resolveType(Map<String, String> type, int n) {
-        Map<Integer, Integer> output = new HashMap<>();
 
-        for (Map.Entry<String, String> entry : type.entrySet()) {
-            int key = 0;
-            String sKey = entry.getKey();
-            for (int i = 0; i < sKey.length(); i++) {
-                switch (sKey.charAt(i)) {
-                    case '1':
-                        key = 3 * key + 2;
-                        break;
-                    case '2':
-                        key = 3 * key + 0;
-                        break;
-                    case '0':
-                    case '_':
-                        key = 3 * key + 1;
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            String sValue = entry.getValue();
-            int value0 = score_data0.get(sValue);
-            int value1 = score_data1.get(sValue);
-            int value2 = score_data2.get(sValue);
-
-            switch (n) {
-                case 0:
-                    output.put(key, value0);
-                    break;
-                case 1:
-                    output.put(key, value1);
-                    break;
-                case 2:
-                    output.put(key, value2);
-                    break;
-                default:
-                    break;
-            }
-
-        }
-        return output;
-    }
-
-    public static int[] getType(int[][] conData, Pos p, int coff) {
-
-        int n = 4;
-
-        int[] type = new int[4];
-
-        for (int i = 0; i < dir4.length; i++) {
-            int type_elem = 0;
-
-            if (p.plus(n).onArray(conData) != 0) {
-                throw new NullPointerException("2p: " + p.toString() + ", dir: " + i + ", coff: " + coff);
-            }
-
-            for (int k = -4; k <= 4; k++) {
-                type_elem = 3 * type_elem + 1 + coff * p.plus(n).plus(dir4[i].times(k)).onArray(conData);
-            }
-
-            if (!chess_type0.containsKey(type_elem)) {
-                throw new NullPointerException("p: " + p.toString() + ", dir: " + i + ", coff: " + coff);
-            }
-            type[i] = chess_type0.get(type_elem);
-        }
-        return type;
-
-    }
+//    public static int[] getType(int[][] conData, Pos p, int coff) {
+//
+//        int n = 4;
+//
+//        int[] type = new int[4];
+//
+//        for (int i = 0; i < dir4.length; i++) {
+//            int type_elem = 0;
+//
+//            if (p.plus(n).onArray(conData) != 0) {
+//                throw new NullPointerException("2p: " + p.toString() + ", dir: " + i + ", coff: " + coff);
+//            }
+//
+//            for (int k = -4; k <= 4; k++) {
+//                type_elem = 3 * type_elem + 1 + coff * p.plus(n).plus(dir4[i].times(k)).onArray(conData);
+//            }
+//
+//            if (!chess_type0.containsKey(type_elem)) {
+//                throw new NullPointerException("p: " + p.toString() + ", dir: " + i + ", coff: " + coff);
+//            }
+//            type[i] = chess_type0.get(type_elem);
+//        }
+//        return type;
+//
+//    }
 
     /**
      * get the type of the point p from 4 directions
@@ -361,26 +302,26 @@ public class Calculate {
      * @param type
      * @return
      */
-    private static int scoreFunction1(String[] type) {
-        int score = 0;
-        for (String s : type) {
-            score += score_data.get(s);
-        }
-        return score;
-    }
+//    private static int scoreFunction1(String[] type) {
+//        int score = 0;
+//        for (String s : type) {
+//            score += score_data.get(s);
+//        }
+//        return score;
+//    }
 
     /**
      * analyze the four type
      *
-     * @param type
+     * @param
      * @return
      */
-    @SuppressWarnings("unused")
-    private static int scoreFunction2(String[] type) {
-        int score = 0;
-
-        return score;
-    }
+//    @SuppressWarnings("unused")
+//    private static int scoreFunction2(String[] type) {
+//        int score = 0;
+//
+//        return score;
+//    }
 
     // public static int[][] possibleScore(ChessData d,int n) {
     // int[][] result = new int[size][size];
@@ -411,7 +352,6 @@ public class Calculate {
 //
 //        return result;
 //    }
-
     public static Pos findMax(int[][] data) {
         int x = 0, y = 0, max = 0;
 
@@ -640,7 +580,7 @@ public class Calculate {
 //        }
 //    }
 
-    public static void updateTypeMap(CData d, Pos p){
+    public static void updateTypeMap(CData d, Pos p) {
         // update at most 8 * 4 = 32 pos
         // find the neighbor4 points. collect with set.
         Set<Pos> posSet = new HashSet<>();
@@ -662,8 +602,45 @@ public class Calculate {
             if (d.getBoard(pos) != 0) {
                 throw new NoSuchElementException(d.getData().toString());
             }
+            Type type = Type.getType(d.getBoard(), pos);
+            if (type.isNone()) {
+                d.typeMap.remove(pos);
+            } else {
+                d.typeMap.put(pos, type);
+            }
 
-            d.typeMap.put(pos, Type.getType(d.getBoard(), pos));
+        }
+    }
+
+
+    /**
+     * it is not readable
+     */
+    public static void updateTypeMapOptimized(CData d, Pos p) {
+        // update at most 8 * 4 = 32 pos
+        // find the neighbor4 points.
+        for (int i = 0; i < 4; i++) {
+            for (int n = -4; n <= 4; n++) {
+                if (n != 0) {
+                    Pos pos = dir4[i].times(n).plus(p);
+                    if (pos.inRect() && d.notContain(pos)) {
+                        //Type type = d.typeMap.get(pos);//d.getType(pos);//
+                        if (d.getType(pos) == null) {
+                            //d.typeMap.put(pos, Type.getType(d.getBoard(), pos));
+                            d.putType(pos, Type.getType(d.getBoard(), pos));
+                            //type.updateAll(d,pos);
+                        } else {
+                            d.getType(pos).update(d, pos, i);
+                        }
+
+                        // if the point is useless
+                        if (d.getType(pos).isNone()) {
+                            //d.typeMap.remove(pos);
+                            d.removeType(pos);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -676,34 +653,12 @@ public class Calculate {
 
     public static void main(String[] args) {
 
-        CData d = new CData("00,77");
+        CData d = new CData("77");
 
         //Type t = Type.getType(d.getBoard(), new Pos(7, 8));
         //d.typeMap
 
 
-//
-//        for (int i = 0; i < 5; i++) {
-//            d = new CData(Tool.runExe(Calculate.engine_wine, "00,"+d.toString()));
-//            d.append(d.getBestPosition());
-//        }
-//
-//        System.out.println(d.toString());
-
-
-        //System.out.println(3 * 3 * 3 * 3 * 3 * 3 * 3 * 3 * 3);
-        //System.out.println(chess_type0.values());
-        // ChessData d = new
-        // ChessData("00,77,86,76,85,75,74,78,79,87,97,96,a7,69,a6,a5");
-        // System.out.println(Arrays.toString(getType(d, new Pos(7, 7))));
-
-        // // System.out.println(score_data2.get("three"));
-        // System.out.println(chess_type.get("1011_2111"));
-        // ChessData d = new ChessData("ow 77");
-        // System.out.println(Calculate.alphaBetaRoot(d, 1));
-        //
-        // System.out.println();
-        // // System.out.println(score());
     }
 
 }

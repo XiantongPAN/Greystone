@@ -3,6 +3,7 @@ package com.panxiantong;
 import com.panxiantong.gomoku.CData;
 import com.panxiantong.gomoku.Calculate;
 import com.panxiantong.gomoku.Tool;
+import com.panxiantong.gomoku.Type;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -54,7 +55,7 @@ public class CalcServlet extends HttpServlet {
                 } else if (s.charAt(1) == '1') {
                     // use wine engine
                     // identifier = 1
-                    String wine = Tool.runExe(Calculate.engine_wine, s);
+                    String wine = Tool.runExe(Type.engine_wine, s);
                     d = new CData(wine);
                 } else if (s.charAt(1) == '2') {
                     // CData step

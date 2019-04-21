@@ -43,6 +43,8 @@ public class Pos implements Move {
         this.y = y;
     }
 
+
+
     /**
      * A hex string representation of a point
      *

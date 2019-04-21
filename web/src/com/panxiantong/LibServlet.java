@@ -5,9 +5,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.List;
@@ -23,6 +21,7 @@ import com.panxiantong.gomoku.CNode;
 @WebServlet(name = "LibServlet", urlPatterns = "/LibServlet")
 public class LibServlet extends HttpServlet {
 
+    private boolean validLib = true;
     private List<Pos> data;
     private Map<Pos, String> children;
     private String comment;
@@ -43,24 +42,37 @@ public class LibServlet extends HttpServlet {
         CData d = new CData(data);
 
 
-        String dr = "/Users/mac/Dropbox/wzq/";
-        //String s = dr + "山口打点（科普版）.lib";
-        String s = dr +"puyue.lib";
-        LibTree lt = new LibTree(s);
-        CNode<LibElement> tree = lt.readLib();
+        String dir = "/Users/mac/Dropbox/wzq/";
+        String s = dir + json.get("lib").getAsString() + ".lib";
 
 
-        // children position
-        children = LibTree.getInfo(s, d);
+        //check
+        if(new File(s).exists()){
 
-        // if comment has no content, json data will not include it.
-        comment = tree.getData().getComment();
-        if(comment == null || comment.equals("")){
-            comment = "no comment";
+            validLib = true;
+
+
+//            LibTree lt = new LibTree(s);
+//            children = lt.getInfo(s, d);
+//            CNode<LibElement> tree = lt.tree0;
+
+            CNode<LibElement> tree= (CNode<LibElement>)Tool.readObjectFromFile();
+            children = LibTree.getInfo(tree, d);
+
+            // if comment has no content, json data will not include it.
+            comment = tree.getData().getComment();
+            if (comment == null || comment.equals("")) {
+                comment = "no comment";
+            }
+
+
+
+        }else{
+            validLib = false;
         }
 
-
         System.out.println(new Gson().toJson(this));
+
 
         // set charset to send chinese
         response.setHeader("Content-type", "text/html;charset=UTF-8");

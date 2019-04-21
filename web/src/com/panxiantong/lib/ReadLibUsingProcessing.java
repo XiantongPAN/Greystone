@@ -5,6 +5,10 @@ import com.panxiantong.gomoku.CData;
 import com.panxiantong.gomoku.Pos;
 import processing.core.PApplet;
 
+/**
+ * <a href=https://processing.org/tutorials/eclipse/>ref</a>
+ * the problem may be caused by jdk10 or mac system. win+jdk8 should be work.
+ */
 public class ReadLibUsingProcessing extends PApplet {
 
     int init_x = 50;

@@ -1,10 +1,11 @@
 package com.panxiantong.gomoku;
 
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CNode<T> {
+public class CNode<T> implements Serializable {
     private CNode<T> parent;
 
     private T data;

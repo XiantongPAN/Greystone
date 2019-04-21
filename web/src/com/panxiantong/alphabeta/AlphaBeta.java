@@ -10,58 +10,55 @@ package com.panxiantong.alphabeta;
  * applied to a standard minimax tree, it returns the same move as minimax
  * would, but prunes away branches that cannot possibly influence the final
  * decision. (description from Wikipedia.org)
- * 
- * @author Constantin Brincoveanu
  *
+ * @author Constantin Brincoveanu
  */
 public class AlphaBeta {
-	private Position game;
+    private Position game;
 
-	/**
-	 * Initializes a new {@link com.panxiantong.alphabeta.AlphaBeta AlphaBeta} search.
-	 * 
-	 * @param game
-	 *            The game position that should be searched through.
-	 */
-	public AlphaBeta(Position game) {
-		this.game = game;
-	}
+    /**
+     * Initializes a new {@link com.panxiantong.alphabeta.AlphaBeta AlphaBeta} search.
+     *
+     * @param game The game position that should be searched through.
+     */
+    public AlphaBeta(Position game) {
+        this.game = game;
+    }
 
-	/**
-	 * Calculates the best move in the current position for the given depth.
-	 * 
-	 * @param depth
-	 *            the number of plies that will be calculated ahead.
-	 * @return the calculated best move.
-	 */
-	public Move analyzeDepth(int depth) {
-		SearchWorker worker = new SearchWorker(game, depth);
-		worker.start();
-		try {
-			worker.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		return worker.getBestMove();
-	}
+    /**
+     * Calculates the best move in the current position for the given depth.
+     *
+     * @param depth the number of plies that will be calculated ahead.
+     * @return the calculated best move.
+     */
+    public Move analyzeDepth(int depth) {
+        SearchWorker worker = new SearchWorker(game, depth);
+        worker.start();
+        try {
+            worker.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return worker.getBestMove();
+    }
 
-	/**
-	 * Calculates the best move in the current position for the given duration
-	 * (iterative deepening).
-	 * 
-	 * @param milliSeconds
-	 *            after this time the search thread will be interrupted.
-	 * @return the calculated best move.
-	 */
-	public Move analyze(int milliSeconds) {
-		SearchWorker worker = new SearchWorker(game);
-		worker.start();
-		try {
-			Thread.sleep(milliSeconds);
-			worker.interrupt();
-			worker.join();
-		} catch (InterruptedException e) {
-		}
-		return worker.getBestMove();
-	}
+    /**
+     * Calculates the best move in the current position for the given duration
+     * (iterative deepening).
+     *
+     * @param milliSeconds after this time the search thread will be interrupted.
+     * @return the calculated best move.
+     */
+    public Move analyze(int milliSeconds) {
+        SearchWorker worker = new SearchWorker(game);
+        worker.start();
+        try {
+            Thread.sleep(milliSeconds);
+            worker.interrupt();
+            worker.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return worker.getBestMove();
+    }
 }

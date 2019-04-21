@@ -21,14 +21,20 @@ public class Search implements Position {
      */
     @Override
     public List<Move> getMoves() {
-        if (Calculate.isWin(d)) {
-            return new ArrayList<>();
-        } else {
-            return new ArrayList<>(Calculate.possiblePosition(d, 2));
-            //return new ArrayList<>(d.typeMap.keySet());
+        var moves = new ArrayList<Move>();
+        if (!Calculate.isWin(d)) {
+            Pos p = Calculate.vcf0(d);
+            if (!p.equals(new Pos(-1, -1))) {
+                //return new ArrayList<>().add(Calculate.vcf0(d));
+                moves.add(Calculate.vcf0(d));
+            } else {
+                moves.addAll(d.typeMap.keySet());
+                //return new ArrayList<>(Calculate.possiblePosition(d, 2));
+                //return new ArrayList<>(d.typeMap.keySet());
+            }
+
         }
-
-
+        return moves;
     }
 
     /**
@@ -64,13 +70,14 @@ public class Search implements Position {
      */
     @Override
     public int evaluate() {
-        int score = 0;
+
+        int value = 0;
         for (Move m : getMoves()) {
-            score += d.getValue((Pos) m);
+            value += d.getType((Pos) m).getScore();
         }
-
-
-        return currentlyMaximizing() ? -score : score;
+        return value;
+        //return d.getValue(d.getBestPosition());
+        //return currentlyMaximizing() ? -score : score;
     }
 
     /**
@@ -86,7 +93,7 @@ public class Search implements Position {
     }
 
     public static void main(String[] args) {
-        AlphaBeta ab = new AlphaBeta(new Search(new CData("00,77,78,86,87")));
+        AlphaBeta ab = new AlphaBeta(new Search(new CData("77,78,87")));
         Pos p = (Pos) ab.analyzeDepth(4);
         System.out.println(p);
     }

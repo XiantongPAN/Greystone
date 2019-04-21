@@ -3,7 +3,9 @@ package com.panxiantong.lib;
 
 import com.panxiantong.gomoku.Pos;
 
-public class LibElement {
+import java.io.Serializable;
+
+public class LibElement implements Serializable {
 
     // Point
     private byte data;

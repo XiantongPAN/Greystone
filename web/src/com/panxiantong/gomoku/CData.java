@@ -94,7 +94,7 @@ public class CData {
         // dataSequence = a;
         //dataSequence.addAll(a);
 
-        // TODO: calculate board and typemap
+        // TODO: calculate board and type map
     }
 
 
@@ -103,7 +103,7 @@ public class CData {
     }
 
 
-    private int getBoard(Pos p) {
+    public int getBoard(Pos p) {
         return board[p.x + 4][p.y + 4];
     }
 
@@ -172,7 +172,7 @@ public class CData {
         // for former steps, type map may contains p already.
         typeMap.remove(p);
 
-        Calculate.updateTypeMap(this, p);
+        Calculate.updateTypeMapOptimized(this, p);
         return this;
     }
 
@@ -195,7 +195,7 @@ public class CData {
 
 
         typeMap.put(p, Type.getType(getBoard(), p));
-        Calculate.updateTypeMap(this, p);
+        Calculate.updateTypeMapOptimized(this, p);
 
         return this;
     }
@@ -227,6 +227,20 @@ public class CData {
     public CData copy() {
         return new CData(dataSequence);
     }
+
+
+    public Type getType(Pos p){
+        return typeMap.get(p);
+    }
+
+    public void putType(Pos pos,Type t){
+        typeMap.put(pos, t);
+    }
+
+    public void removeType(Pos pos){
+        typeMap.remove(pos);
+    }
+
 
     /**
      * used to print (web app)
@@ -271,8 +285,7 @@ public class CData {
 //    }
 
 
-    public boolean isWin() {
-        return false;
+//    public boolean isWin() {
 //        for (Type type : typeMap.values()) {
 //            for (int b : type.black) {
 //                if (b == five) {
@@ -286,7 +299,7 @@ public class CData {
 //            }
 //        }
 //        return false;
-    }
+//    }
 
     public int getValue(Pos p) {
         if (!typeMap.containsKey(p)) {
@@ -368,19 +381,9 @@ public class CData {
 
     // Test
     public static void main(String[] args) {
-        CData d = new CData("00,77,86,88,66,78,76,96,87,98");
-        System.out.println(d.append(d.getBestPosition()));
+        CData d = new CData("00,50,01,51,02,52,03,53,54");
+        System.out.println(d.getBestPosition());
 
-//        for (int i = 0; i < 20; i++) {
-//            d.append(d.getBestPosition());
-//        }
-        System.out.println(d.getValue(new Pos(10, 8)));
-
-        System.out.println(d.typeMap.get(new Pos(10, 8)));
-
-        //System.out.println(Arrays.toString(d.board[4]));
-        //System.out.println(d.typeMap.get(new Pos(1, 1)));
-        //d.plot();
     }
 
 }
